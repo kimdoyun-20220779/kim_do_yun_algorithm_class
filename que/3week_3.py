@@ -15,22 +15,22 @@
 
 
     # 출력
-    def display(self, msg="LinearQueueNoReset"):
-        """큐의 상태를 출력"""
-        
-        print(f"{msg}: front={self.front}, rear={self.rear},\
-              size={self.size()}/{self.capacity}", end="  |  ")
+def display(self, msg="LinearQueueNoReset"):
+    """큐의 상태를 출력"""
 
-        # 전체 슬롯(0..capacity-1)을 순서대로 출력
-        # active 구간(front < i <= rear)은 실제 값, 그 외는 None로 표시
-        print("[", end="")
-        for i in range(self.capacity):
-	if (self.front < i <= self.rear):
-		val = self.array[i] 
-	else:
-		val = None
-             print(val, end=" ")
-        print("]")
+    print(f"{msg}: front={self.front}, rear={self.rear}, size={self.size()}/{self.capacity}", end="  |  ")
+
+    # 전체 슬롯(0..capacity-1)을 순서대로 출력
+    # active 구간(front < i <= rear)은 실제 값, 그 외는 None로 표시
+    print("[", end="")
+    for i in range(self.capacity):
+        if (self.front < i <= self.rear):
+            val = self.array[i]
+        else:
+            val = None
+        print(val, end=" ")
+
+    print("]")
 
 
 
