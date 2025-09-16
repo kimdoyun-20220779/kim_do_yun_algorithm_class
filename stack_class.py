@@ -1,59 +1,39 @@
-# define stack class with push, pop, peek, is_empty, and size, methods
-class arrayStack:
-    def __init__(self, capacity):
-        self.capacity = capacity
-        self.array = [None] * capacity
-        self.top = -1
+# 괄호 검사 프로그램
+from stack_class import ArrayStack
 
-    def is_empty(self):
-        return self.top == -1
-    
-    def is_full(self):
-        return self.top == self.capacity - 1
-    
-    def push(self, item):
-        if not self.is_full():
-            self.top += 1
-            self.array[self.top] = item
-            print(f"PUSH : {item!r} -> stack is now {self.array[:self.top+1]}")
-        else:
-            raise OverflowError("Stack Overflow")
-        
-    def pop(self):
-        if not self.is_empty(): 
-            item = self.array[self.top]
-            self.array[self.top] = None
-            self.top -= 1
-            print(f"POP : {item!r} -> stack is now {self.array[:self.top+1]}")
-            return item
-        else:
-            raise IndexError("Stack Underflow") 
+def checkBrackets(statement):
+    #여는 괄호는 push, 담는 괄호가 나오면 스택의 맨 위와 짝이 맞는지 확인 후 pop -> LTFO 이용
 
-    def peek(self):
-        if not self.is_empty():
-            return self.array[self.top]
-        return None
+    pairs = {')':'(','[':']','}':'{'}
+    openings = set(pairs.values())
+    stack = Arraystack(len(statement))
 
-    def size(self):
-        return self.top + 1
-    
-# Test the stack class
+    for ch in statement: # 입력 문자열 순회
+        if ch in openings: #여는 괄호이면 스텍이 push
+                stack.push(ch)
+        elif ch in pairs: #닫힌 괄호이면 
+             if stack.is_empty() : # 조건 2 위반 : 짝이 맞지 않음
+                return false
+             if stack.peek()  != pairs[ch] : #조건 3위반 : 짝이 맞지 않음
+                return false
+                stack.pop()
+    else:
+            pass # 괄히 아니면 무시
 
-def reverse_string(statement):
-    print("\n[1] Push 단계 -------------------------------------")
-    stack = arrayStack(len(statement))
-    for char in statement:
-        stack.push(char)
-    
-    print("\n[2] Pop 단계 -------------------------------------")
-    out = []
-    while not stack.is_empty():
-        out.append(stack.pop())
-    
-    result = ''.join(out)
-    print(f"\n[3] 최종 결과 : {result}")
-    return result
+    return stack.is_empty() # True -> 검사 성공 , False: 조건 1 위반 (여는 괄히가 남아있음)
+
+#테스트 하기
+def test_brackets():
+    test = [
+        "{A[(i+1)=0;]}", # True}
+        "if ((x<0)) && (y<3)", # False
+        'WHILE  (N<8)) {N++}', 
+        "arr[(i+1)]=0", # False
+    ]
+            
+    for t in tests:
+        print(t, "->", checkBrackets(t))
 
 if __name__ == "__main__":
-    statement = "안녕하세요, 반갑습니다."
-    reverse_string(statement)    
+    test_brackets()
+    
