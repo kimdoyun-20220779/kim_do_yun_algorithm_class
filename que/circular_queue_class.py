@@ -22,7 +22,37 @@ class CircularQueueOneSlotEmpty:
 
     def is_full(self):
         return self.front == (self.rear +1) % self.N
+    
+    def enqueue(self, item):
+        #맨 뒤 요소 추기
+        if not self.is_full():
+            self.rear  = (self.rear +1)% self.N
+            self.array[self.rear] = item
+        else:
+            print ("원형큐가 포화상태 -> 요소삽입 불가")
+
+    def dequeue(self):
+        #맨 앞 요소 삭제
+        if not self.is_empty():
+            self.front = (self.front + 1)%self.N
+            item = self.array[self.front]
+            self.array[self.front] = None #옵션
+            return item
+        else:
+            raise IndexError("원형큐가 비어있음 -> 삭제 불가")
+        
+    def peek(self):
+        #현재 원형큐에 저장된 맨 앞의 요소를 검색
+        if not self.is_empty():
+            return self.array[(self.front + 1) % self.N]
+        else:
+            raise IndexError("원형큐가 비어있음 -> 삭제 불가")
    
+    def size(self):
+        #현재 원형큐에 저장된 요소의 총 개수
+        return(self.rear - self.front + self.N) %self.N
+
+
     def display(self, msg="CircularQueueOneSlotEmpty"):
         
         print(f"{msg}: front={self.front}, rear={self.rear}, size={self.size()}/{self.capacity}")
@@ -66,7 +96,7 @@ def test_basic():
     # test_basic() : 가득 채우기 → 전부 비우기 → 다시 1개 넣기
     print("\n=== test_basic ===")
     q = CircularQueueOneSlotEmpty(capacity=8)
-    q.display("초기 상태")
+    q.display("초기 상태") #front == rear == 0
     print()
 
     # 가득 채우기   
@@ -75,7 +105,7 @@ def test_basic():
     q.display("포화 상태")
     print()
 
-    # 다시 1개 넣기
+    # 다시 1개 넣기 -> 오버플로우 -> 삽입실패
     q.enqueue(777)
     q.display()
     print("peek:", q.peek())
@@ -85,7 +115,7 @@ def test_basic():
     print("삭제순서: ", end="")
     while not q.is_empty():
         print(q.dequeue(), end=" ")
-    q.display("모두 제거 후")
+    q.display("모두 제거 후") #front == rear !=0 거짓포화상태
     print()
 
     # 다시 1개 넣기
@@ -93,8 +123,30 @@ def test_basic():
     q.display()
     print("peek:", q.peek())
 
-     
+def quiz_2():
+    #1. cpacity 8인 원형큐
+    print ("=============quiz2=============")
+    q = CircularQueueOneSlotEmpty(capacity=8)
+    #2. front = rear = 6
+    q.front = 6
+    q.rear = 6
+    #연산 처리
+    q.enqueue(10)
+    q.display("10 삽입 결과")
+    q.enqueue(11)
+    q.display("11 삽입 결과")
+    q.enqueue(12)
+    q.display("12 삽입 결과")
+    q.enqueue(13)
+    q.display("13 삽입 결과")
+    q.dequeue()
+    q.display("삭제 결과")
+    q.dequeue()
+    q.display("삭제 결과")
+    print(f" front={q.front}, rear={q.rear}")
+    
+
 
 if __name__ == "__main__":
-    test_basic()
-    
+   # test_basic()
+    quiz_2()
