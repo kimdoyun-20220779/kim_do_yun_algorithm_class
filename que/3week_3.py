@@ -45,7 +45,7 @@ class LinearQueueNoReset:
         if not self.is_empty():
             return self.array[self.front + 1]
         else:
-            raise IndexError("원형큐가 비어있음 -> 삭제 불가")
+            raise IndexError("선형큐가 비어있음 -> 삭제 불가")
    
     def size(self):
         #현재 원형큐에 저장된 요소의 총 개수
