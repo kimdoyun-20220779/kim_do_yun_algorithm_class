@@ -8,7 +8,7 @@
 # - 빈 큐 : front = -1, rear = -1
 # - 포화 상태 큐 : rear = capacity - 1
 # 작성자: 김도윤
-# 작성 날짜:
+# 작성 날짜:2025-09-28
 #############################################################
 class LinearQueueNoReset:
     def __init__(self, capacity):
