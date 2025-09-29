@@ -34,8 +34,8 @@ class LinearQueueNoReset:
     def dequeue(self):
         #맨 앞 요소 삭제
         if not self.is_empty():
-            item = self.array[self.front]
             self.front += 1
+            item = self.array[self.front]
             return item
         else:
             raise IndexError("선형큐가 비어있음 -> 삭제 불가")
