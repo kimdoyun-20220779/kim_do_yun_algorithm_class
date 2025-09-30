@@ -76,7 +76,16 @@ class DLinkedList:
         if node == None :              
             return None               
         else :                      
-            return node.data         
+            return node.data   
+        
+    def replace(self, pos, elem):
+        # pos 위치에 있는 데이터 변경 106페이지 문제
+        node = self.getNode(pos)
+
+        if node is not None:
+            node.data = elem
+        else:
+            return              
     
     def getNode(self, pos):
         # pos번에 있는 노드 반환
@@ -104,17 +113,54 @@ class DLinkedList:
         print(msg, end = '     ')
         ptr = self.head
         while ptr is not None:
-            print(ptr.data, end = '->')
+            print(ptr.data, end = '<->')
             ptr = ptr.next
         print("None")
 
+    def insert(self, pos, elem):
+        # pos위치 노드 삽입
+        if pos < 0 : return 
+
+        new = DNode(elem)
+        before = self.getNode(pos - 1)
+        
+        if before is not None: # 새로운 노드 삽입
+            before.append(new)
+        else:
+            if pos == 0: # 머리 노드 삽입
+                new.next = self.head
+                if new.next is not None:
+                    new.next.prev = new
+                self.head = new
+                return
+            else: # 리스트 범위 초과
+                return
+            
+    def delete(self, pos):
+        # pos 위치 노드 삭제
+        if pos < 0 : return
+
+        before = self.getNode(pos - 1)
+        if before is None:
+            if pos == 0:
+                deleted = self.head
+                if self.head is not None:
+                    self.head = deleted.next
+                    self.head.prev = None # 새로운 머리 노드의 이전 노드는 None
+                    deleted.prev = None # 삭제 노드 연결 해제
+                    deleted.next = None # 삭제 노드 연결 해제
+                return deleted
+            else:
+                return
+        else: # 중간 노드 삭제
+            before.popNext()
 
 
         
 
 #=========================================================
 # 코드 3.3 단순연결리스트 테스트 프로그램 이용   
-#1. 연결 리스트 생성
+#1. 이중 연결 리스트 생성
 ll = DLinkedList()
 ll.display("연결리스트(초기):   ")      # 출력: LinkedList: None
 
