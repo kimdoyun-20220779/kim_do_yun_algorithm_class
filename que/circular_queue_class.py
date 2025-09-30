@@ -148,5 +148,5 @@ def quiz_2():
 
 
 if __name__ == "__main__":
-   # test_basic()
-    quiz_2()
+   test_basic()
+   # quiz_2()

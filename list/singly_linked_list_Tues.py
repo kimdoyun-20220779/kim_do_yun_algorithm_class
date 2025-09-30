@@ -9,6 +9,26 @@
 """
 # 단순연결구조를 위한 Node 클래스
 
+class Node:
+    def __init__(self, elem, link = None):
+        self.data = elem # 데이터 필드
+        self.link = link # 링크 필드
+    
+    def append(self, node):
+        #노드와 노드 사이 삽입하는 연산
+        if node is not None:
+            node.link = self.link
+            self.link = node
+
+    def popNext(self):
+        #다음 노드를 리스트에서 제거하고 반환
+        next = self.link
+        if next is not None:
+            self.link = next.link
+        return next
+
+
+
 # 코드 3.2: 단순연결리스트 클래스
 """
 1. 단순 연결 리스트 구조를 관리하는 클래스
@@ -27,12 +47,95 @@
 """
 # 단순연결리스트 클래스
 
+class LinkedList:
+    def __init__(self):
+        self.head = None
 
+    def isempty(self):
+        # 리스트가 비어있는지 확인
+        return self.head == None
 
+    def isfull(self):
+        # 리스트가 포화상태인지 확인
+        return False
 
+    def getNode(self, pos):
+        # pos번에 있는 노드 반환
+        if pos < 0 : return None
+        if self.head == None:
+            return None
+        else:    
+            ptr = self.head
+            for _  in range(pos):
+                if ptr == None:
+                    return None
+                ptr = ptr.link
+            return ptr
 
+    def getEntry(self, pos):
+        # pos위치에 있는 노드의 데이터를 반환
+        node = self.getNode(pos)
+        if node == None : return None
+        else:
+            return node.data
+        
+    def insert(self, pos, elem):
+        # pos 위치에 새로운 노드 추가
+        if pos < 0 : return
+        
+        new = Node(elem)
+        before = self.getNode(pos - 1)
+        if before is None:
+            if pos == 0: # 머리 노드로 삽입
+                new.link = self.head
+                self.head = new
+            else: # pos가 리스트의 범위를 벗어남
+                raise IndexError("리스트 밖에 있는 위치")
+        else: #중간노드 삽입
+            before.append(new) # before 노드에 삽입
 
+    def delete(self, pos):
+        # pos위치에 있는 노드 삭제
+        if pos < 0 : raise IndexError("empty 혹은 범위 밖 오류")
 
+        before = self.getNode(pos-1)
+
+        if before is None:
+            if pos == 0: # 머리노드 삭제 
+                deleted = self.head
+                self.head = deleted.link
+                deleted.link = None
+                return deleted
+            else: # pos가 리스트 바깥 범위
+                raise ValueError("리스트 밖에 있는 위치")
+        else: 
+            before.popNext() # 중간노드 삭제
+
+    def size(self):
+        if self.head == None : return 0 # 리스트가 빈 경우 0 반환
+        ptr = self.head
+        count = 0
+        while ptr is not None:
+            count+=1
+            ptr = ptr.link
+        return count
+        
+    def display(self, msg="Linkedlist"):
+        print(msg, end = '     ')
+        ptr = self.head
+        while ptr is not None:
+            print(ptr.data, end = '->')
+            ptr = ptr.link
+        print("None")
+
+    def replace(self, pos, elem):
+        # pos 위치에 있는 데이터 변경 106페이지 문제
+        node = self.getNode(pos)
+
+        if node is not None:
+            node.data = elem
+        else:
+            return 
 
 
 
@@ -77,7 +180,7 @@ def test_code_3_3():
 
 
 if __name__ == "__main__" :
-    # test_code_3_3()  
+    test_code_3_3()  
     # test()
     # quiz_2()
 

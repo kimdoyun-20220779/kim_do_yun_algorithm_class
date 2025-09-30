@@ -40,7 +40,7 @@ class CircularDeque(CircularQueueOneSlotEmpty):
             raise IndexError("덱이 포화상태 -> 삽입 불가")
         else:
             self.array[self.front] = item
-            self.front = (self.front - 1) % self.N # front를 반시계 방향으로 이동
+            self.front = (self.front - 1+ self.N) % self.N # front를 반시계 방향으로 이동
 
     def delete_rear(self): # 후단에서 삭제
         if self.is_empty():
