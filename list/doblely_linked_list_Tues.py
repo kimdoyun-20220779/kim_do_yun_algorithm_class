@@ -13,6 +13,30 @@
     - popNext() : 현재 노드 뒤에 있는 노드 삭제
 """
 
+class DNode:
+    def __init__(self, elem, prev = None, next = None):
+        self.data = elem
+        self.next = next
+        self.prev = prev
+
+    def append(self, new):
+        # 현재 노드 다음에 새 노드 삽입
+        new.next = self.next
+        new.prev = self
+        if new.next is not None:
+            new.next.prev = new
+        self.next = new
+
+    def popNext(self):
+        # 현재 노드의 다음 노드 삭제 
+        deleted = self.next
+        if deleted is not None:
+            self.next = deleted.next
+            deleted.next = None
+            if self.next is not None:
+                self.next.prev = self
+        return deleted
+      
 
     
 #===============================================================================================
@@ -54,10 +78,39 @@ class DLinkedList:
         else :                      
             return node.data         
     
-    
+    def getNode(self, pos):
+        # pos번에 있는 노드 반환
+        if pos < 0 : return None
+        if self.head == None:
+            return None
+        else:    
+            ptr = self.head
+            for _  in range(pos):
+                if ptr == None:
+                    return None
+                ptr = ptr.next
+            return ptr
+
+    def size(self):
+        if self.head == None : return 0 # 리스트가 빈 경우 0 반환
+        ptr = self.head
+        count = 0
+        while ptr is not None:
+            count+=1
+            ptr = ptr.next
+        return count
+
+    def display(self, msg="Linkedlist"):
+        print(msg, end = '     ')
+        ptr = self.head
+        while ptr is not None:
+            print(ptr.data, end = '->')
+            ptr = ptr.next
+        print("None")
 
 
 
+        
 
 #=========================================================
 # 코드 3.3 단순연결리스트 테스트 프로그램 이용   

@@ -8,7 +8,7 @@
 # - 빈 큐 : front = -1, rear = -1
 # - 포화 상태 큐 : rear = capacity - 1
 # 작성자: 김도윤
-# 작성 날짜:
+# 작성 날짜:2025-09-28
 #############################################################
 class LinearQueueNoReset:
     def __init__(self, capacity):
@@ -34,8 +34,8 @@ class LinearQueueNoReset:
     def dequeue(self):
         #맨 앞 요소 삭제
         if not self.is_empty():
-            item = self.array[self.front]
             self.front += 1
+            item = self.array[self.front]
             return item
         else:
             raise IndexError("선형큐가 비어있음 -> 삭제 불가")
@@ -45,7 +45,7 @@ class LinearQueueNoReset:
         if not self.is_empty():
             return self.array[self.front + 1]
         else:
-            raise IndexError("원형큐가 비어있음 -> 삭제 불가")
+            raise IndexError("선형큐가 비어있음 -> 삭제 불가")
    
     def size(self):
         #현재 원형큐에 저장된 요소의 총 개수
