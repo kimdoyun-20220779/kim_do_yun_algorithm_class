@@ -6,14 +6,82 @@ import matplotlib.pyplot as plt
 plt.rcParams["font.family"] = "Malgun Gothic"  
 
 # 1. 노드 클래스 정의
+class bstnode:
+    def __init__(self, key, value):
+        #노드 생성 key(비교기준), value(저장 데이터), 좌우 자식은 None
+        self.key = key
+        self.value = value
+        self.left = None
+        self.right = None
+
+    #출력시 보기 좋은 형식으로 출력(튜플)
+    def __repr__(self):
+        return f"({self.key!r},{self.value!r})"        
+    
 
 # 2. 키(key)값으로 노드를 찾는 탐색 (순환구조)
+def search_bst(n, key):
+    # n : bstnode
+    if n is not None:
+        return None
+    elif key == n.key:
+        return n
+    elif key < n.key:
+        return search_bst(n.left, key)
+    else:
+        return search_bst(n.right, key)
+
+
 
 # 3. 값(value)으로 노드를 찾는 탐색 (전위 순회 기반)
+def search_value_bst(n, value):
+    if n is None:
+        return None
+    if value == n.value:
+       return n
+    res = search_value_bst(n.left, value)
+    if res is None:
+        return res
+    else:
+        search_value_bst(n.right, value)
+
+
 
 # 4. 삽입 연산 (순환 구조)
+def insert_bst(root, node):
+    if root is None:
+        return node
+    if node.key == root.key:
+        return root
+    if node.key < root.key:
+        root.left = insert_bst(root.left, node)
+    else:
+        root.right = insert_bst(root.right, node)
 
+    return root
 # 5. 삭제 연산
+def delete_bst(root, key):
+    if root is None:
+        return root
+    if key < root.key:
+        root.left = delete_bst(root.left, key)
+    elif key > root.key:
+        root.right = delete_bst(root.right, key)
+
+    else:
+        if root.left == None:
+            return root.right
+        elif root.right == None:
+            return root.left
+        succ = root.right
+        while succ.left != None:
+            succ = succ.left
+
+        root.key = succ.key
+        root.value = succ.value
+        root.right = delete_bst(root.right, succ.key)
+
+    return root
 
 
 # 6. 순회 함수
@@ -53,7 +121,7 @@ if __name__ == "__main__":
 
     root = None # 루트를 초기화
     for key, value in data: # 각 항목으로 BSTNode 생성 후 트리에 삽입 (중복 키는 insert_bst에서 무시)
-        root = insert_bst(root, BSTNode(key, value))
+        root = insert_bst(root, bstnode(key, value))
 
     print_tree("현재 트리 전위순회:", root)
 
@@ -93,18 +161,18 @@ if __name__ == "__main__":
 # 9. 성능 테스트 (삽입/탐색 속도)
 # bst_perf_ｇｒａｐｈ＿test(sizes) 정의
 
-if __name__ == "__main__":
-    sizes = [1000, 2000, 5000, 10000, 20000]
-    # 그래프 시각화: bst_perf_ｇｒａｐｈ＿test 호출 후 결과 플롯
-    insert_times, search_times = bst_perf_ｇｒａｐｈ＿test(sizes)
+# if __name__ == "__main__":
+#     sizes = [1000, 2000, 5000, 10000, 20000]
+#     # 그래프 시각화: bst_perf_ｇｒａｐｈ＿test 호출 후 결과 플롯
+#     insert_times, search_times = bst_perf_ｇｒａｐｈ＿test(sizes)
 
-    plt.figure(figsize=(8,5))
-    plt.plot(sizes, insert_times, 'o-', color='seagreen', label='삽입 총시간 (ms)')
-    plt.plot(sizes, search_times, 'o-', color='orange', label='탐색 1회 평균 (ms)')
-    plt.title("BST 삽입/탐색 성능")
-    plt.xlabel("노드 수 (n)")
-    plt.ylabel("시간 (ms)")
-    plt.legend()
-    plt.grid(True, linestyle='--', alpha=0.6)
-    plt.tight_layout()
-    plt.show()
+#     plt.figure(figsize=(8,5))
+#     plt.plot(sizes, insert_times, 'o-', color='seagreen', label='삽입 총시간 (ms)')
+#     plt.plot(sizes, search_times, 'o-', color='orange', label='탐색 1회 평균 (ms)')
+#     plt.title("BST 삽입/탐색 성능")
+#     plt.xlabel("노드 수 (n)")
+#     plt.ylabel("시간 (ms)")
+#     plt.legend()
+#     plt.grid(True, linestyle='--', alpha=0.6)
+#     plt.tight_layout()
+#     plt.show()
