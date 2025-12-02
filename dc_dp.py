@@ -3,7 +3,7 @@
 # =================================================================================================
 # 1. 배열 합 구하기 문제 : 억지기법
 
-# def sum_vf(arr): # O(len(arr)), 곡간복잡도 O(1)
+# def sum_vf(arr): # O(len(arr)), 공간복잡도 O(1)
 #     total = 0
 #     for x in arr:
 #         total += x
@@ -27,28 +27,219 @@
 # print("iterative sum = ", sum_vf(arr))
 # print("divide &conquer sum = ",sum_dc(arr,0,len(arr)-1))
 
+# =================================================================================================
 
 # 2. 거듭제곱 계산 문제 : 억지기법 vs 분할(축소) 정복
-def power_bf(x, n): # O(n)
-    # 억지 기법 반복문 구조
-    result = 1.0
-    for _ in range(n):
-        result *= x
-    return result
+# def power_bf(x, n): # O(n)
+#     # 억지 기법 반복문 구조
+#     result = 1.0
+#     for _ in range(n):
+#         result *= x
+#     return result
 
-def power_dc(x, n): # O(n)
-    # DC의 축소 정복 기반 재귀 구조
-    if n == 1: # 종료조건
-        return x
-    elif n % 2 == 0: # n이 짝수
-        return power_dc(x * x, n//2) # 재귀 호출 절반크기로 감소
-    else:
-        return x * power_dc(x * x, (n - 1) // 2) # 재귀 호출 절반크기로 감소
+# def power_dc(x, n): # O(n)
+#     # DC의 축소 정복 기반 재귀 구조
+#     if n == 1: # 종료조건
+#         return x
+#     elif n % 2 == 0: # n이 짝수
+#         return power_dc(x * x, n//2) # 재귀 호출 절반크기로 감소
+#     else:
+#         return x * power_dc(x * x, (n - 1) // 2) # 재귀 호출 절반크기로 감소
     
-x = 2.0
-n = 10
-print(f"억지 기법 _x 의 n 거듭 제곱 ({x}, {n} = {power_bf(x, n)})")
-print(f"축소 기법 _x 의 n 거듭 제곱 ({x}, {n} = {power_dc(x, n)})")
+# x = 2.0
+# n = 10
+# print(f"억지 기법 _x 의 n 거듭 제곱 ({x}, {n} = {power_bf(x, n)})")
+# print(f"축소 기법 _x 의 n 거듭 제곱 ({x}, {n} = {power_dc(x, n)})")
+
+
+# =================================================================================================
+
+# 3. k번째 작은 수를 찾는 문제 (k-th smallest element)
+# 1. 분할 함수 정의 - 퀵정렬의 분할 함수 사용
+def parition(A, left, right):
+    pivot = A[left] # 피벗 설정
+    i = left + 1 # 왼쪽 서브리스트 포인터
+    j = right # 오른쪽 서브리스트 포인터
+    
+    while True:
+        while i <= j and A[i] <= pivot:
+            i += 1
+        while i <= j and A[j] > pivot:
+            j -= 1
+        if i > j:
+            break
+        A[i], A[j] = A[j], A[i]
+    A[left], A[j] = A[j], A[left]
+    return j
+
+# 억지 기법 : 정렬 이용
+def kth_smallest_bf(arr,k):
+    B = sorted(arr)
+    return B[k-1]
+
+# 축소정복 전략 사용 - 재귀함수와 분할함수 이용
+def quick_select(A, left, right, k):
+    if left == right: # 함수 호출 종료
+        return A[left]
+    
+    #피벗을  배열 A의 첫번쨰 요소로 설정
+    pos = parition(A, left, right)
+    # pos는 0부터 시작하는 인덱스 -> 순서로 변환시 pos + 1
+    # k와 pos + 1을 비교
+
+    if k + left == pos + 1: # case 1 - 피벗이 k번째인 경우
+        return A[pos] 
+    elif k + left < pos + 1: # case 2 - k번째 작은수가 피펏의 왼쪽에 나타나는 경우
+        return quick_select(A, left, pos - 1, k)
+    else:
+        # case 3 k번째 작은수가 피벗의 오른쪽에 나타나는 경우 k를 갱신
+        return quick_select(A, pos + 1, right, k - (pos + 1 - left))
+
+A1 = [7,2,1,8,6,3,5,4,0]
+A2 = A1.copy()
+k = 3
+print("억지기법 : ",  kth_smallest_bf(A1,k))
+print("축소정복 : ",  quick_select(A2, 0, len(A2)-1, k))    
+print("*"*100)
+
+# =================================================================================================
+
+# 4. merge sort 병합정렬
+# 오름차순으로 정렬, 중복된 데이터 허용 안정적 정렬, 추가 메모리 사용
+def merge(A,left,mid,right):
+    # 1. 임시 리스트 생성 : 크기 = right -left + 1
+    sorted_list = [0] *(right - left + 1)
+    
+    # 2. 두 부분 리스트의 시작 인덱스
+    i = left # 왼쪽부분 시작 인덱스
+    j = mid + 1 # 오른쪽 부분 시작 인덱스
+    k = 0 #임시 리스트의 시작 인덱스
+    
+    # 3. 두 정렬 리스트를 비교하여 임시 리스트에 기록
+    while i <= mid and j <= right :
+        if A[i] <= A[j]:
+            sorted_list[k] = A[i]
+            i += 1
+            k += 1
+        else:
+            sorted_list[k] = A[j]
+            j += 1
+            k += 1
+    
+    # 4. 왼쪽 부분 리스트가 남아있는 경우 모두 복사
+    while i <= mid:
+        sorted_list[k] = A[i]
+        i += 1
+        k += 1
+    
+    # 5. 오른쪽 부분 리스트가 남아있는 경우 모두 복사
+    while j <= right:
+        sorted_list[k] = A[j]
+        j += 1
+        k += 1
+    
+    # 6. 임시 리스트의 결과를 원래 리스트 A에 덮어쓰기
+    for t in range(k):
+        A[left + t] = sorted_list[t]
+
+
+# 병합 정렬 함수
+def merge_sort(A,left, right):
+    if left < right: # 항목이 두개 이상인 경우 분할 Ologn
+        mid = (left + right) // 2
+        # 왼쪽 부분 정렬
+        merge_sort(A, left, mid)
+        # 오른쪽 부분 정렬
+        merge_sort(A, mid + 1, right)
+        # 정렬된 두 부분 리스트를 병합 - O(n)
+        merge(A,left,mid,right) 
+
+A = [38, 27, 43, 3, 9, 82]
+print("정렬 전 : ", A)
+merge_sort(A, 0, len(A) - 1)
+print("정렬 후 : ", A)
+print("*"*100)
+
+
+# =================================================================================================
+# 알고리즘 설계 전략 : 동적 계획법(Dynamic Programing)
+# =================================================================================================
+# 1. fibonarcci sequence (피보나치 수열) 문제
+# (1) 동적계획법 - 메모제이션 방식 - top down 방식
+
+# 전역변수로 메모이제이션 배열 준비 (0~10까지)
+mem = [None] * 11
+
+def fib_fp_mem(n):
+    if mem[n] is None:
+        if n< 2:
+            mem[n] = n
+        else:
+            mem[n] = fib_fp_mem(n-1) + fib_fp_mem(n -2)
+    return mem[n]
+
+    
+print("n = 6 => fib(6) : ",fib_fp_mem(6))
+print("mem = ", mem[:7])
+print("*"*100)
+
+# (2) 동적 계획법 - 테이블화 방식 bottom up 방식 - 작은문제부터 큰 문제로 주어진 문제 해결
+def fis_dp_tab(n):
+    # 1. 1차원 리스트 준비
+    table = [None] * (n + 1)
+    table[0] = 0
+    table[1] = 1
+    for i in range(2, n + 1):
+        table[i] = table[i - 2] + table[i - 1]
+    return table
+
+table = fis_dp_tab(6)
+print(table[6])
+print("table = ", table[:7])
+print("*"*100)
+
+# =================================================================================================
+# 계단 프로그래밍 과제
+# =================================================================================================
+
+
+
+
+def fis_dp_tab(n):
+    # 1. 1차원 리스트 준비
+    table = [None] * (n + 1)
+    table[1] = 1
+    table[2] = 2
+    for i in range(3, n + 1):
+        table[i] = table[i - 2] + table[i - 1]
+    return table
+    
+stairs = input("계단의 개수를 입력하세요 : ")
+stairs = int(stairs)
+table = fis_dp_tab(stairs)
+print(f"{stairs}개의 계단을 오르는방법의 수는 총 {table[stairs]}개 입니다.")
+print("*"*100)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
